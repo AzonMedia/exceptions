@@ -42,14 +42,16 @@ trait ErrorReferenceTrait
     public function getErrorComponentClass() : ?string
     {
         $ret = NULL;
+        $Packages = new Packages(Packages::get_application_composer_file_path());
         foreach ($this->getTrace() as $frame) {
             if (!empty($frame['class'])) {
-                $Package = (new Packages(Packages::get_application_composer_file_path()))->get_package_by_class($frame['class']);
+                $Package = $Packages->get_package_by_class($frame['class']);
                 if ($Package) {
                     $package_ns = Packages::get_package_namespace($Package);
                     $component_class = $package_ns.'Component';
                     if (class_exists($component_class)) {
                         $ret = $component_class;
+                        break;
                     }
                 }
             }
