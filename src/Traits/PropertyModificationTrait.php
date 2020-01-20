@@ -62,7 +62,7 @@ trait PropertyModificationTrait
      * It uses Reflection to make the private property $previous accessible
      *
      */
-    private function setProperty(string $property_name, /* mixed */ $property_value) : void
+    protected function setProperty(string $property_name, /* mixed */ $property_value) : void
     {
         // $reflection = new \ReflectionClass($this);
         // while( ! $reflection->hasProperty($property_name) ) {

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Azonmedia\Exceptions\Traits;
 
+use Azonmedia\Utilities\GeneralUtil;
+
 trait BasicTrait
 {
     private ?string $uuid = NULL;
@@ -11,6 +13,7 @@ trait BasicTrait
 
     public function __construct(string $message = '', int $code = 0, \Throwable $previous = NULL, ?string $uuid = NULL)
     {
+
         if ($uuid && !GeneralUtil::is_uuid($uuid)) {
             print sprintf('The provided UUID %s to the exception is not a valid UUID. The provided UUID will be ignored.', $uuid);
         } else {

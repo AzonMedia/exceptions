@@ -16,7 +16,8 @@
     "require": {
         "php": ">=7.2.0",
         "azonmedia/packages": "dev-master",
-        "azonmedia/components": "dev-master"
+        "azonmedia/components": "dev-master",
+        "azonmedia/utilities": "dev-master"
     },
     "autoload": {
         "psr-4": {
