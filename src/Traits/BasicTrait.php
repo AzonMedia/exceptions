@@ -25,9 +25,25 @@ trait BasicTrait
         parent::__construct($message, $code, $previous);
     }
 
+    public function __toString() : string
+    {
+        //return $this->getPrettyMessage();
+        return $this->getCompleteMessage();
+    }
+
     public function get_microtime_created() : int
     {
+        return $this->getMicrotimeCreated();
+    }
+
+    public function getMicrotimeCreated() : int
+    {
         return $this->microtime_created;
+    }
+
+    public function getUUID() : ?string
+    {
+        return $this->uuid;
     }
 
     public function getDebugData() : string
@@ -38,4 +54,5 @@ trait BasicTrait
             $this->getFile().':'.$this->getLine().PHP_EOL;
         return $ret;
     }
+
 }
