@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Azonmedia\Exceptions\Traits;
 
+use Azonmedia\Exceptions\InvalidArgumentException;
 use Azonmedia\Packages\Packages;
 use Azonmedia\Translator\Translator as t;
 
@@ -12,8 +13,9 @@ trait ErrorReferenceTrait
     /**
      * Returns the error reference URL for the given exception.
      * Returns NULL if no UUID is provided to the exception or the base error reference URL is not defined.
-     * @see self::getErrorReferenceBaseUrl()
      * @return string|null
+     * @throws InvalidArgumentException
+     * @see self::getErrorReferenceBaseUrl()
      */
     public function getErrorReferenceUrl() : ?string
     {
@@ -90,6 +92,7 @@ trait ErrorReferenceTrait
     /**
      * Returns a message suitable for showing to end user.
      * @return string
+     * @throws InvalidArgumentException
      */
     public function getPrettyMessage() : string
     {
@@ -110,6 +113,7 @@ trait ErrorReferenceTrait
     /**
      * Returns a message suitable for the developer.
      * @return string
+     * @throws InvalidArgumentException
      */
     public function getCompleteMessage() : string
     {
