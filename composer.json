@@ -4,7 +4,7 @@
     "description": "Base exceptions",
     "keywords": ["exceptions"],
     "homepage": "https://github.com/AzonMedia/exceptions",
-    "license": "BSD-3-Clause",
+    "license": "MIT",
     "authors": [
         {
             "name": "Vesko Kenashkov",
