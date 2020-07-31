@@ -6,6 +6,7 @@ namespace Azonmedia\Exceptions\Traits;
 use Azonmedia\Exceptions\InvalidArgumentException;
 use Azonmedia\Packages\Packages;
 use Azonmedia\Translator\Translator as t;
+use Azonmedia\Utilities\Source;
 
 trait ErrorReferenceTrait
 {
@@ -57,16 +58,60 @@ trait ErrorReferenceTrait
     {
         $ret = NULL;
         $Packages = new Packages(Packages::get_application_composer_file_path());
+
         foreach ($this->getTrace() as $frame) {
             if (!empty($frame['class'])) {
                 $Package = $Packages->get_package_by_class($frame['class']);
                 if ($Package) {
                     $package_ns = Packages::get_package_namespace($Package);
-                    $component_class = $package_ns.'Component';
-                    if (class_exists($component_class)) {
-                        $ret = $component_class;
-                        break;
+                    if ($package_ns) {
+                        if ($package_ns[-1] !== '\\') {
+                            $package_ns .= '\\';
+                        }
+                        $component_class = $package_ns.'Component';
+                        if (class_exists($component_class)) {
+                            $ret = $component_class;
+                            break;
+                        }
+                    } else {
+                        //look for the component.php file by using the installed package path
+                        $component_install_path = trim($Packages->get_package_installation_path($Package).PHP_EOL);
+                        //the look in the files
+                        $autoload_rules = $Package->getAutoload();
+                        $component_file_path = '';
+                        if (isset($autoload_rules['files'])) {
+                            foreach ($autoload_rules['files'] as $autoload_file) {
+                                if (file_exists($component_install_path.'/Component.php')) {
+                                    $component_file_path = $component_install_path.'/Component.php';
+                                }
+                                if (!$component_file_path) {
+                                    $path_components = explode('/', $autoload_file);
+                                    $composed_path = '/';
+                                    foreach ($path_components as $path_component) {
+                                        $composed_path .= $path_component.'/';
+                                        if (file_exists($component_install_path.$composed_path.'Component.php')) {
+                                            $component_file_path = $component_install_path.$composed_path.'Component.php';
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if ($component_file_path) {
+                            $package_ns = Source::get_file_namespace($component_file_path);
+                            if ($package_ns) {
+                                if ($package_ns[-1] !== '\\') {
+                                    $package_ns .= '\\';
+                                }
+                                $component_class = $package_ns.'Component';
+                                if (class_exists($component_class)) {
+                                    $ret = $component_class;
+                                    break;
+                                }
+                            }
+                        }
                     }
+
                 }
             }
         }
