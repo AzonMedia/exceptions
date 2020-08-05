@@ -6,7 +6,7 @@ namespace Azonmedia\Exceptions\Traits;
 use Azonmedia\Exceptions\InvalidArgumentException;
 use Azonmedia\Packages\Packages;
 use Azonmedia\Translator\Translator as t;
-use Azonmedia\Utilities\Source;
+use Azonmedia\Utilities\SourceUtils;
 
 trait ErrorReferenceTrait
 {
@@ -98,7 +98,7 @@ trait ErrorReferenceTrait
                             }
                         }
                         if ($component_file_path) {
-                            $package_ns = Source::get_file_namespace($component_file_path);
+                            $package_ns = SourceUtils::get_file_namespace($component_file_path);
                             if ($package_ns) {
                                 if ($package_ns[-1] !== '\\') {
                                     $package_ns .= '\\';
