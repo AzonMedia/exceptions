@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Azonmedia\Exceptions\Traits;
 
+use Azonmedia\Exceptions\Interfaces\BaseExceptionInterface;
 use Azonmedia\Exceptions\InvalidArgumentException;
 use Azonmedia\Packages\Packages;
 use Azonmedia\Translator\Translator as t;
@@ -165,19 +166,23 @@ trait ErrorReferenceTrait
         $ret = '';
         $Exception = $this;
         do {
-            $ret .= sprintf(t::_('%s %s in %s#%s.'), get_class($this), $this->getMessage(), $this->getFile(), $this->getLine() ).PHP_EOL;
-            $uuid = $this->getUUID();
-            $component_name = $this->getErrorComponentName();
-            if ($component_name) {
-                $ret .= sprintf(t::_('Component: %s'), $component_name ).PHP_EOL;
+            $ret .= sprintf(t::_('%s %s in %s#%s.'), get_class($Exception), $Exception->getMessage(), $Exception->getFile(), $Exception->getLine() ).PHP_EOL;
+            if ($Exception instanceof BaseExceptionInterface) {
+                $component_name = $Exception->getErrorComponentName();
+                if ($component_name) {
+                    $ret .= sprintf(t::_('Component: %s'), $component_name) . PHP_EOL;
+                }
+                $error_url = $Exception->getErrorReferenceUrl();
+                if ($error_url) {
+                    $ret .= sprintf(t::_('ERROR REFERENCE: %s'), $error_url) . PHP_EOL;
+                }
             }
-            $error_url = $this->getErrorReferenceUrl();
-            if ($error_url) {
-                $ret .= sprintf(t::_('ERROR REFERENCE: %s'), $error_url).PHP_EOL;
-            }
-            $ret .= t::_('Stack Trace:').PHP_EOL;
-            $ret .= $this->getTraceAsString().PHP_EOL;
+            $ret .= t::_('Stack Trace:') . PHP_EOL;
+            $ret .= $Exception->getTraceAsString() . PHP_EOL;
             $Exception = $Exception->getPrevious();
+            if ($Exception) {
+                $ret .= t::_('Previous Exception:') . PHP_EOL;
+            }
         } while ($Exception);
 
         return $ret;
