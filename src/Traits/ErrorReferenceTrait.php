@@ -152,7 +152,10 @@ trait ErrorReferenceTrait
         }
 
         //return sprintf(t::_('%s "%s" in module %s. %s'), get_class($this), $message, $component, $ref_url);
-        $ex_message = sprintf(t::_('%s "%s" in module %s.'), get_class($this), $message, $component, $ref_url);
+
+        //$ex_message = sprintf(t::_('%s "%s" in module %s.'), get_class($this), $message, $component, $ref_url);
+        //the module does not appear to be correct... suppress this
+        $ex_message = sprintf(t::_('%1$s "%2$s"'),get_class($this), $message);
         return $ex_message.' '.$ref_message;
     }
 
